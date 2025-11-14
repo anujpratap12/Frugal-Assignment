@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Registration — Frugal Testing Software Engineer</title>
+<style>
+  
+  :root{
+    --bg:#0b0b0b;
+    --card:#111;
+    --accent:#e50914;
+    --muted:#bdbdbd;
+    --danger:#ff4d4d;
+    --success:#16a34a;
+    --glass: rgba(255,255,255,0.03);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg,#060606 0%, #0f0f0f 60%);
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+
+  .wrap{
+    width:100%;
+    max-width:920px;
+    display:grid;
+    grid-template-columns: 1fr 520px;
+    gap:28px;
+    align-items:center;
+  }
+
+  .promo{
+    background: linear-gradient(180deg, rgba(229,9,20,0.08), transparent);
+    border-radius:14px;
+    padding:36px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  }
+  .promo h1{ margin:0 0 12px 0; font-size:32px; color:var(--accent) }
+  .promo p{ color:var(--muted); font-size:15px; line-height:1.5 }
+
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:14px;
+    padding:22px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  }
+  .form-head{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin-bottom:12px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+  }
+  .logo{
+    width:38px; height:38px; background:var(--accent); border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:700;
+    box-shadow: 0 6px 18px rgba(229,9,20,0.18);
+  }
+  .brand h2{ margin:0; font-size:18px; letter-spacing:0.2px }
+  .summary{
+    background:transparent; color:var(--muted); font-size:13px;
+  }
+
+  form{ display:grid; gap:10px; }
+  .row{ display:flex; gap:10px; }
+  .col{ flex:1; min-width:0; }
+  label{ display:block; font-size:13px; color:var(--muted); margin-bottom:6px; }
+  input[type="text"], input[type="email"], input[type="password"], select, textarea {
+    width:100%;
+    padding:12px 14px;
+    background:var(--card);
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.04);
+    color:#fff;
+    font-size:14px;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid rgba(233,9,20,0.12) }
+
+  .small{ font-size:13px; color:var(--muted) }
+
+  .error-text{ color:var(--danger); font-size:13px; margin-top:6px; display:none; }
+  .show{ display:block; }
+
+  .field-invalid input, .field-invalid select, .field-invalid textarea {
+    border-color: rgba(255,77,77,0.9);
+    box-shadow: 0 4px 18px rgba(255,77,77,0.06);
+  }
+
+  .top-errors{
+    padding:10px 12px;
+    border-radius:8px;
+    background: rgba(255,77,77,0.08);
+    color:var(--danger);
+    display:none;
+    margin-bottom:8px;
+    font-size:14px;
+  }
+
+  .password-meter{
+    height:8px;
+    background:rgba(255,255,255,0.04);
+    border-radius:6px;
+    overflow:hidden;
+    margin-top:6px;
+  }
+  .pw-fill{ height:100%; width:0%; transition:width .25s ease; background:linear-gradient(90deg,#ffb3b3,#ff4d4d); }
+
+  .pw-label{ font-size:13px; margin-top:6px; color:var(--muted) }
+
+  .actions{
+    display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:6px;
+  }
+  button[type="submit"]{
+    background:var(--accent);
+    border:none; padding:12px 18px; color:#fff; border-radius:8px; font-weight:600; cursor:pointer;
+    box-shadow: 0 8px 24px rgba(229,9,20,0.18);
+  }
+  button[disabled]{
+    opacity:0.5; cursor:not-allowed; box-shadow:none;
+  }
+
+  .success{
+    display:none;
+    padding:12px; border-radius:8px; background: rgba(22,163,74,0.12); color:var(--success); margin-bottom:8px;
+  }
+
+  /* small screens */
+  @media (max-width:880px){
+    .wrap{ grid-template-columns:1fr; padding:8px }
+    .promo{ order:2 }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="promo">
+      <h1>Frugal Testing — Registration</h1>
+      <p>Build & automate an intelligent registration system. This front-end is inspired by Netflix's dark UI with a bold accent. Fill the form and try automation scripts included below (Cypress/Selenium).</p>
+      <ul class="small">
+        <li>Client-side validation (real-time)</li>
+        <li>Disabled submit until required fields valid</li>
+        <li>Disposable email blocking</li>
+        <li>Phone format checks by country</li>
+        <li>Password strength meter</li>
+      </ul>
+    </div>
+
+    <div class="card" aria-live="polite">
+      <div class="form-head">
+        <div class="brand"><div class="logo">FT</div><h2>Registration Form</h2></div>
+        <div class="summary small">Fields marked required are mandatory</div>
+      </div>
+
+      <div id="success" class="success" role="status">✅ Registration Successful! Your profile has been submitted successfully.</div>
+      <div id="topErrors" class="top-errors" role="alert"></div>
+
+      <form id="regForm" novalidate>
+        <div class="row">
+          <div class="col">
+            <label for="firstName">First Name <span class="small" style="color:var(--accent)">*</span></label>
+            <div class="field" id="fld-firstName">
+              <input id="firstName" name="firstName" type="text" autocomplete="given-name" />
+              <div class="error-text" id="err-firstName">First name required (min 2 chars)</div>
+            </div>
+          </div>
+
+          <div class="col">
+            <label for="lastName">Last Name <span class="small" style="color:var(--accent)">*</span></label>
+            <div class="field" id="fld-lastName">
+              <input id="lastName" name="lastName" type="text" autocomplete="family-name" />
+              <div class="error-text" id="err-lastName">Last name required (min 2 chars)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="email">Email <span class="small" style="color:var(--accent)">*</span></label>
+            <div class="field" id="fld-email">
+              <input id="email" name="email" type="email" autocomplete="email" />
+              <div class="error-text" id="err-email">Enter a valid email. Disposable addresses are not allowed.</div>
+            </div>
+          </div>
+
+          <div class="col">
+            <label for="phone">Phone Number <span class="small" style="color:var(--accent)">*</span></label>
+            <div class="field" id="fld-phone">
+              <input id="phone" name="phone" type="text" placeholder="+91xxxxxxxxxx or +1xxxxxxxxxx" autocomplete="tel" />
+              <div class="error-text" id="err-phone">Enter a valid phone number with country code (e.g. +91).</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="age">Age</label>
+            <div class="field" id="fld-age">
+              <input id="age" name="age" type="text" inputmode="numeric" />
+              <div class="error-text" id="err-age">Enter a valid age (numbers only)</div>
+            </div>
+          </div>
+
+          <div class="col">
+            <label>Gender <span class="small" style="color:var(--accent)">*</span></label>
+            <div id="fld-gender" class="field">
+              <label class="small"><input type="radio" name="gender" value="male"> Male</label>
+              &nbsp;&nbsp;
+              <label class="small"><input type="radio" name="gender" value="female"> Female</label>
+              &nbsp;&nbsp;
+              <label class="small"><input type="radio" name="gender" value="other"> Other</label>
+              <div class="error-text" id="err-gender">Please select a gender.</div>
+            </div>
+          </div>
+        </div>
+
+        <label for="address">Address</label>
+        <div class="field" id="fld-address">
+          <textarea id="address" name="address" rows="2"></textarea>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="country">Country</label>
+            <div class="field" id="fld-country">
+              <select id="country" name="country">
+                <option value="">Select Country</option>
+                <option value="IN">India</option>
+                <option value="US">United States</option>
+                <option value="GB">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="CA">Canada</option>
+                <!-- Add more as needed -->
+              </select>
+            </div>
+          </div>
+          <div class="col">
+            <label for="state">State</label>
+            <div class="field" id="fld-state">
+              <select id="state" name="state">
+                <option value="">Select State</option>
+                <!-- Basic list for India as example; this can be programmatically updated -->
+                <option data-country="IN">Rajasthan</option>
+                <option data-country="IN">Uttar Pradesh</option>
+                <option data-country="IN">Maharashtra</option>
+                <option data-country="US">California</option>
+                <option data-country="US">Texas</option>
+                <option data-country="GB">England</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+           <label for="city">City</label>
+<div class="field" id="fld-city">
+  <select id="city" name="city">
+    <option value="">Select City</option>
+
+    <!-- Rajasthan -->
+    <option data-state="Rajasthan">Alwar</option>
+    <option data-state="Rajasthan">Jaipur</option>
+    <option data-state="Rajasthan">Kota</option>
+    <option data-state="Rajasthan">Jodhpur</option>
+
+    <!-- Uttar Pradesh -->
+    <option data-state="Uttar Pradesh">Lucknow</option>
+    <option data-state="Uttar Pradesh">Kanpur</option>
+    <option data-state="Uttar Pradesh">Noida</option>
+
+    <!-- Maharashtra -->
+    <option data-state="Maharashtra">Mumbai</option>
+    <option data-state="Maharashtra">Pune</option>
+    <option data-state="Maharashtra">Nagpur</option>
+  </select>
+</div>
+
+          </div>
+
+          <div class="col">
+            <label for="password">Password</label>
+            <div class="field" id="fld-password">
+              <input id="password" name="password" type="password" autocomplete="new-password" />
+              <div class="password-meter" aria-hidden="true">
+                <div id="pwFill" class="pw-fill"></div>
+              </div>
+              <div class="pw-label small" id="pwLabel">Password strength: <span id="pwStrength">—</span></div>
+              <div class="error-text" id="err-password">Password must be at least 8 chars and include letters & numbers</div>
+            </div>
+          </div>
+        </div>
+
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="field" id="fld-confirmPassword">
+          <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" />
+          <div class="error-text" id="err-confirmPassword">Passwords do not match.</div>
+        </div>
+
+        <div class="field" id="fld-tnc">
+  <label class="small">
+    <input id="tnc" type="checkbox" /> 
+    I accept the Terms & Conditions <span style="color:var(--accent)">*</span>
+  </label>
+  <div class="error-text" id="err-tnc">You must accept terms & conditions.</div>
+</div>
+
+      
+
+        <div class="actions">
+          <div class="small">Already have an account? <a href="#" style="color:var(--accent)">Login</a></div>
+          <div>
+            <button type="submit" id="submitBtn" disabled>Register</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="successMessage" style="display:none; color:#4caf50; margin-top:20px;">
+  Registration Successful
+</div>
+<script>
+/* ======= Validation & Logic ======= */
+const form = document.getElementById('regForm');
+const submitBtn = document.getElementById('submitBtn');
+const topErrors = document.getElementById('topErrors');
+const successBox = document.getElementById('success');
+
+const fields = {
+  firstName: document.getElementById('firstName'),
+  lastName: document.getElementById('lastName'),
+  email: document.getElementById('email'),
+  phone: document.getElementById('phone'),
+  age: document.getElementById('age'),
+  gender: document.getElementsByName('gender'),
+  address: document.getElementById('address'),
+  country: document.getElementById('country'),
+  state: document.getElementById('state'),
+  city: document.getElementById('city'),
+  password: document.getElementById('password'),
+  confirmPassword: document.getElementById('confirmPassword'),
+  tnc: document.getElementById('tnc')
+};
+
+// small disposable domains list (extendable)
+const disposableDomains = [
+  "tempmail.com","10minutemail.com","mailinator.com","yopmail.com",
+  "guerrillamail.com","maildrop.cc","dispostable.com","trashmail.com",
+  "getnada.com","throwawaymail.com"
+];
+
+// country phone code map (basic)
+const countryCodes = {
+  "IN": "+91", "US": "+1", "GB":"+44", "AU":"+61", "CA":"+1"
+};
+
+// helper: show/hide error
+function showErr(id, msg){
+  const fld = document.getElementById('fld-'+id);
+  const err = document.getElementById('err-'+id);
+  if(msg){
+    fld.classList.add('field-invalid');
+    err.textContent = msg;
+    err.classList.add('show');
+  } else {
+    fld.classList.remove('field-invalid');
+    err.classList.remove('show');
+  }
+}
+
+function getSelectedGender(){
+  for(const g of fields.gender) if(g.checked) return g.value;
+  return '';
+}
+
+function isDisposableEmail(email){
+  const domain = email.split('@')[1] || '';
+  return disposableDomains.includes(domain.toLowerCase());
+}
+
+function validateFirstName(){
+  const v = fields.firstName.value.trim();
+  if(v.length < 2) { showErr('firstName','First name required (min 2 chars)'); return false; }
+  showErr('firstName',''); return true;
+}
+
+function validateLastName(){
+  const v = fields.lastName.value.trim();
+  if(v.length < 2) { showErr('lastName','Last name required (min 2 chars)'); return false; }
+  showErr('lastName',''); return true;
+}
+
+function validateEmail(){
+  const v = fields.email.value.trim();
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!re.test(v)) { showErr('email','Enter a valid email address'); return false; }
+  if(isDisposableEmail(v)) { showErr('email','Disposable email addresses are not allowed'); return false; }
+  showErr('email',''); return true;
+}
+
+function validatePhone(){
+  const v = fields.phone.value.trim();
+  if(!v) { showErr('phone','Phone required with country code'); return false; }
+  // if country selected: ensure starts with country code
+  const c = fields.country.value;
+  if(c && countryCodes[c]){
+    if(!v.startsWith(countryCodes[c])) { showErr('phone',`Phone must start with ${countryCodes[c]}`); return false; }
+  } else {
+    // require + and digits
+    if(!/^\+\d{6,15}$/.test(v)) { showErr('phone','Phone must start with + and contain 6-15 digits'); return false; }
+  }
+  showErr('phone',''); return true;
+}
+
+function validateAge(){
+  const v = fields.age.value.trim();
+  if(!v) { showErr('age',''); return true; } // optional
+  if(!/^\d{1,3}$/.test(v)) { showErr('age','Enter a valid age (numbers only)'); return false; }
+  const num = parseInt(v,10);
+  if(num < 1 || num > 120) { showErr('age','Enter a realistic age'); return false; }
+  showErr('age',''); return true;
+}
+
+function validateGender(){
+  if(!getSelectedGender()){ showErr('gender','Please select a gender.'); return false; }
+  showErr('gender',''); return true;
+}
+
+function evaluatePasswordStrength(pw){
+  // simple scoring
+  let score = 0;
+  if(pw.length >= 8) score++;
+  if(/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+  if(/\d/.test(pw)) score++;
+  if(/[^A-Za-z0-9]/.test(pw)) score++;
+  // score 0..4
+  return score;
+}
+
+function updatePasswordUI(){
+  const pw = fields.password.value || '';
+  const score = evaluatePasswordStrength(pw);
+  const fill = document.getElementById('pwFill');
+  const label = document.getElementById('pwStrength');
+
+  const percent = Math.min(100, (score / 4) * 100);
+  fill.style.width = percent + '%';
+  if(score <= 1){ label.textContent = 'Weak'; }
+  else if(score === 2 || score === 3){ label.textContent = 'Medium'; }
+  else label.textContent = 'Strong';
+}
+
+function validatePassword(){
+  const pw = fields.password.value;
+  if(pw.length < 8) { showErr('password','Password must be at least 8 characters'); return false; }
+  if(!/[A-Za-z]/.test(pw) || !/\d/.test(pw)) { showErr('password','Include letters and numbers for stronger password'); return false; }
+  showErr('password',''); return true;
+}
+
+function validateConfirmPassword(){
+  const pw = fields.password.value;
+  const cpw = fields.confirmPassword.value;
+  if(pw !== cpw) { showErr('confirmPassword','Passwords do not match.'); return false; }
+  showErr('confirmPassword',''); return true;
+}
+
+function validateTnC(){
+  if(!fields.tnc.checked) { showErr('tnc','You must accept terms & conditions.'); return false; }
+  showErr('tnc',''); return true;
+}
+
+/* aggregate validity */
+function validateAll(){
+  const errors = [];
+  if(!validateFirstName()) errors.push('First name invalid');
+  if(!validateLastName()) errors.push('Last name invalid');
+  if(!validateEmail()) errors.push('Email invalid');
+  if(!validatePhone()) errors.push('Phone invalid');
+  if(!validateAge()) errors.push('Age invalid');
+  if(!validateGender()) errors.push('Gender required');
+  if(!validatePassword()) errors.push('Password invalid');
+  if(!validateConfirmPassword()) errors.push('Passwords do not match');
+  if(!validateTnC()) errors.push('Terms not accepted');
+
+  if(errors.length){
+    topErrors.style.display = 'block';
+    topErrors.textContent = 'Please fix the following: ' + errors.join('; ');
+    return false;
+  } else {
+    topErrors.style.display = 'none';
+    topErrors.textContent = '';
+    return true;
+  }
+}
+
+/* enable/disable submit based on minimal required checks (immediate responsiveness) */
+const requiredChecks = [validateFirstName, validateLastName, validateEmail, validatePhone, validateGender, validatePassword, validateConfirmPassword, validateTnC];
+
+function refreshSubmitState(){
+  // enable only when all requiredChecks pass
+  let ok = true;
+  for(const fn of requiredChecks) {
+    try { if(!fn()) ok = false; } catch(e){ ok=false; }
+  }
+  submitBtn.disabled = !ok;
+}
+
+/* events */
+fields.firstName.addEventListener('input', ()=>{ validateFirstName(); refreshSubmitState(); });
+fields.lastName.addEventListener('input', ()=>{ validateLastName(); refreshSubmitState(); });
+fields.email.addEventListener('input', ()=>{ validateEmail(); refreshSubmitState(); });
+fields.phone.addEventListener('input', ()=>{ validatePhone(); refreshSubmitState(); });
+fields.age.addEventListener('input', ()=>{ validateAge(); refreshSubmitState(); });
+Array.from(fields.gender).forEach(r => r.addEventListener('change', ()=>{ validateGender(); refreshSubmitState(); }));
+fields.password.addEventListener('input', ()=>{ updatePasswordUI(); validatePassword(); validateConfirmPassword(); refreshSubmitState(); });
+fields.confirmPassword.addEventListener('input', ()=>{ validateConfirmPassword(); refreshSubmitState(); });
+fields.tnc.addEventListener('change', ()=>{ validateTnC(); refreshSubmitState(); });
+fields.country.addEventListener('change', ()=>{ /* optionally filter states */ refreshSubmitState(); });
+
+
+/* on submit */
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  successBox.style.display = 'none';
+
+  const ok = validateAll();
+  if(!ok) return;
+
+  // emulate server processing
+  const payload = {
+      firstName: fields.firstName.value.trim(),
+      lastName: fields.lastName.value.trim(),
+      email: fields.email.value.trim(),
+      phone: fields.phone.value.trim(),
+      age: fields.age.value.trim(),
+      gender: getSelectedGender(),
+      address: fields.address.value.trim(),
+      country: fields.country.value,
+      state: fields.state.value,
+      city: fields.city.value
+  };
+
+  // success UI
+  successBox.style.display = 'block';
+  successBox.textContent = '✅ Registration Successful! Your profile has been submitted successfully.';
+
+  form.reset();
+  document.getElementById('pwFill').style.width = '0%';
+  document.getElementById('pwStrength').textContent = '—';
+  submitBtn.disabled = true;
+
+  console.log('Form submitted payload:', payload);
+});
+
+
+
+</script>
+</body>
+</html>
